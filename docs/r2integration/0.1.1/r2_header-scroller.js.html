@@ -40,8 +40,8 @@
             <pre class="prettyprint source linenums"><code>
 class HeaderScroller{
   /**
-   * `HeaderScroller` is a class that listens to `iframe`'s contentWindow.scroll event and scrolls the `header` when the iframe is scrolled
-   * @param {Window} win - iframe.contentWindow
+   * `HeaderScroller` is a class that listens to `iframeEl`'s contentWindow.enablePageScroll event and scrolls the `header` when the iframeEl is scrolled
+   * @param {Window} win - iframeEl.contentWindow
    * @param {HTMLElement} header - header element that needs to be scrolled
    * */
   constructor(win,header){
@@ -85,13 +85,13 @@ class HeaderScroller{
 
   attachListeners(){
     let win = this._meta.contentWindow;
-    win.addEventListener("scroll", this._scrollFixed.bind(this), false); // attach a resize listener to resize the header
-    //win.addEventListener("scroll", this.resizeFixed.bind(this), false); // attach a resize listener to resize the header
+    win.addEventListener("enablePageScroll", this._scrollFixed.bind(this), false); // attach a resize listener to resize the header
+    //win.addEventListener("enablePageScroll", this.resizeFixed.bind(this), false); // attach a resize listener to resize the header
   }
   detachListeners(){
     let win = this._meta.contentWindow;
-    win.removeEventListener("scroll", this._scrollFixed); // attach a resize listener to resize the header
-    //win.removeEventListener("scroll", this.resizeFixed); // attach a resize listener to resize the header
+    win.removeEventListener("enablePageScroll", this._scrollFixed); // attach a resize listener to resize the header
+    //win.removeEventListener("enablePageScroll", this.resizeFixed); // attach a resize listener to resize the header
   }
 
 

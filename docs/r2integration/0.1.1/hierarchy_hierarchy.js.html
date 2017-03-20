@@ -49,7 +49,7 @@ class MDHierarchy {
     let btn = document.querySelector('.dd-target-button');
     if(btn){
       btn.addEventListener('click',e=>{
-        this.constructor.noScroll();
+        this.constructor.disablePageScroll();
         let dd = btn.parentNode.querySelector('.dd-drilldown');
         if(!dd){
           setTimeout(()=>{
@@ -60,7 +60,7 @@ class MDHierarchy {
                     apply = dd.querySelector('.dd-button-select');
                 if(closE.path[0]==dd || closE.path[0]==cancel || closE.path[0]==apply){
                   if(closE.path[0]==dd){cancel.click();}
-                  this.constructor.scroll();
+                  this.constructor.enablePageScroll();
                 }
               })
             }
@@ -69,10 +69,10 @@ class MDHierarchy {
       })
     }
   }
-  static noScroll(){
+  static disablePageScroll(){
     document.querySelector('body').setAttribute('style','overflow:hidden !important');
   }
-  static scroll(){
+  static enablePageScroll(){
     document.querySelector('body').setAttribute('style','');
   }
 }

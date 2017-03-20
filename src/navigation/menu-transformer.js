@@ -3,69 +3,83 @@ import MediaQuery from "media-query";
 import HeaderScroller from "../r2/header-scroller";
 
 
-class MenuTransformer{
+class MenuTransformer {
   /**
-   * This class sets up a listener to detect whether the viewport matches the max-width set up in `breakpoint` and based on existence of an integration-iframe
+   * This class sets up a listener to detect whether the viewport matches the max-width set up in `breakpoint` and based on existence of an integration-iframeEl
    * sets up heade scrollers or just swaps the header into horizontal or sidebar navigation modes
    * @param {Number} [breakpoint=768] - max-width of device viewport that is considered to be a mobile device and hosts a mobile sidebar.
+   * @param {Object} [options]
+   * @param {String} [options.iframeClassName] - r2integration iframe CSS class
+   * @param {String} [options.desktopHeaderClassName] - CSS class of header to display above `breakpoint`
+   * @param {String} [options.mobileHeaderClassName] - CSS class of header to display below `breakpoint`
    * @requires MediaQuery
    * @requires SideNav
    * @requires HeaderScroller
    * */
-  constructor(breakpoint=768){
-    this.iframe = document.querySelector('.r2dashboard');
-    this.header = document.querySelector('.reportal-bar');
+  constructor(breakpoint = 768, options={}) {
+    const {
+            iframeClassName        = '.r2dashboard',
+            desktopHeaderClassName = '.reportal-bar',
+            mobileHeaderClassName  = '.reportal-header',
+          } = options;
 
-    // if it's integration page - do scrolling
-    if(this.iframe){
-      document.querySelector('.body-wrapper').classList.add('integration-mode'); //reverse layout to make header appear above iframe
+    this.iframeEl        = document.querySelector(iframeClassName);
+    this.desktopHeaderEl = document.querySelector(desktopHeaderClassName);
+    this.mobileHeaderEl  = document.querySelector(mobileHeaderClassName);
+    this.currentHeader = null;
 
-      this.pScroller = new Promise((resolve,reject)=>{
-        let headerScroller;
-        if(!this.isBlankIframe){
-          headerScroller = this.makeHeaderScrollable(this.iframe.contentWindow);
-          resolve(headerScroller); //resolve to the instance of `HeaderScroller`
-        } else {
-          this.iframe.addEventListener('load',e=>{
-            headerScroller = this.makeHeaderScrollable(e.target.contentWindow); //initialise headerScroller
-            resolve(headerScroller); //resolve to the instance of `HeaderScroller`
-          });
-        }
-      });
+    if (this.iframeEl){// if it's integration page - do scrolling
+      this.swapHeaderAndIframe();
+      this.headerScrollerInst = this.makeHeaderRespondToIframeScroll();
     }
+
     this.sidenav = new SideNav();
+    this.mediaQuery = new MediaQuery({query: `max-width:${breakpoint}px`}, this.handleBreakpointMatch, this);
+  }
 
-    this.mediaQuery = new MediaQuery({query:`max-width:${breakpoint}px`},(matches)=>{
-      console.log(matches);
-      if(!matches){ // if desktop
-        this.swapHeader(document.querySelector('.reportal-bar'));
-        this.sidenav.removeEventListeners();
-      } else { // if mobile
-        this.swapHeader(document.querySelector('.reportal-header'));
-        this.sidenav.addEventListeners();
+  swapHeaderAndIframe(){
+    document.querySelector('.body-wrapper').classList.add('integration-mode');
+  }
+
+  handleBreakpointMatch(aboveBreakpoint) {
+    if (!aboveBreakpoint) {
+      this.swapHeader(this.desktopHeaderEl);
+      this.sidenav.removeEventListeners();
+    } else {
+      this.swapHeader(this.mobileHeaderEl);
+      this.sidenav.addEventListeners();
+    }
+  }
+
+  makeHeaderRespondToIframeScroll() {
+    return new Promise(resolve => {
+      if (!this.isIframeURLEmpty) {
+        resolve(this.makeHeaderScrollable(this.iframeEl.contentWindow));
+      } else {
+        this.iframeEl.addEventListener('load', e =>
+          resolve(this.makeHeaderScrollable(e.target.contentWindow))
+        );
       }
-    },this);
+    });
   }
 
-  makeHeaderScrollable(iframeContentWindow){
-    return this.header && new HeaderScroller(iframeContentWindow,this.header);
+  makeHeaderScrollable(iframeContentWindow) {
+    return this.desktopHeaderEl && new HeaderScroller(iframeContentWindow, this.desktopHeaderEl);
   }
 
-  get isBlankIframe(){
-    return this.iframe.contentWindow.location.href==='about:blank'
+  get isIframeURLEmpty() {
+    return this.iframeEl.contentWindow.location.href === 'about:blank'
   }
 
   /**
-   * Function that sets this.header to a new HTMLElement and does the same for HeaderScroller
+   * Function that sets this.desktopHeaderEl to a new HTMLElement and does the same for HeaderScroller
    * */
-  swapHeader(header){
-    this.header = header;
-    if(this.iframe && this.pScroller){
-      this.pScroller.then(hs=>hs.header = header);
+  swapHeader(newHeader) {
+    this.currentHeader = newHeader;
+    if (this.iframeEl && this.headerScrollerInst) {
+      this.headerScrollerInst.then(headerScroller => headerScroller.header = newHeader);
     }
   }
-
-
 }
 
 export default MenuTransformer;

@@ -1,7 +1,7 @@
 class HeaderScroller {
   /**
-   * `HeaderScroller` is a class that listens to `iframe`'s contentWindow.scroll event and scrolls the `reportalHeaderHTMLElement` when the iframe is scrolled
-   * @param {Window} contentWindow - iframe.contentWindow
+   * `HeaderScroller` is a class that listens to `iframeEl`'s contentWindow.enablePageScroll event and scrolls the `reportalHeaderHTMLElement` when the iframeEl is scrolled
+   * @param {Window} contentWindow - iframeEl.contentWindow
    * @param {HTMLElement} reportalHeaderHTMLElement - reportalHeaderHTMLElement element that needs to be scrolled
    * */
   constructor(contentWindow, reportalHeaderHTMLElement) {
@@ -20,7 +20,6 @@ class HeaderScroller {
       contentWindow: contentWindow
     };
     this.header = reportalHeaderHTMLElement;
-    console.log(this._meta.contentWindow);
     this._scrollCallback = this._scrollCallback.bind(this);
   }
 
@@ -72,11 +71,11 @@ class HeaderScroller {
 
   attachListeners() {
     const scrollHeader = this._scrollFixed.bind(this);
-    this._meta.contentWindow.addEventListener("scroll", scrollHeader, false);
+    this._meta.contentWindow.addEventListener("enablePageScroll", scrollHeader, false);
   }
 
   detachListeners() {
-    this._meta.contentWindow.removeEventListener("scroll", this._scrollFixed);
+    this._meta.contentWindow.removeEventListener("enablePageScroll", this._scrollFixed);
   }
 
   _scrollFixed() {

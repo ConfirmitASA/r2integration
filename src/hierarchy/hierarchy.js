@@ -1,40 +1,80 @@
-/**
- * Created by IvanP on 07.12.2016.
- */
-
 class MDHierarchy {
   /**
    * attaches a listener to a hierarchy popup when it's initialised to be able to close it on click-outside
    * */
-  constructor(){
-    let btn = document.querySelector('.dd-target-button');
-    if(btn){
-      btn.addEventListener('click',e=>{
-        this.constructor.noScroll();
-        let dd = btn.parentNode.querySelector('.dd-drilldown');
-        if(!dd){
-          setTimeout(()=>{
-            dd = btn.parentNode.querySelector('.dd-drilldown');
-            if(dd){
-              dd.addEventListener('click', closE=>{
-                let cancel = dd.querySelector('.dd-cancel'),
-                    apply = dd.querySelector('.dd-button-select');
-                if(closE.path[0]==dd || closE.path[0]==cancel || closE.path[0]==apply){
-                  if(closE.path[0]==dd){cancel.click();}
-                  this.constructor.scroll();
-                }
-              })
-            }
-          },300);
-        }
-      })
+  static upgrade() {
+    const hierarchyButton = MDHierarchy.hierarchyToggle;
+    hierarchyButton && hierarchyButton.addEventListener('click', MDHierarchy.hierarchyToggleClickHandler)
+  }
+
+  static get hierarchyToggle() {
+    return document.querySelector('.dd-target-button');
+  }
+
+  static get hierarchyChrome() {
+    return MDHierarchy.hierarchyToggle.parentNode.querySelector('.dd-drilldown')
+  }
+
+  static asyncHierarchyChrome() {
+    return new Promise(resolve =>
+      setTimeout(() => {
+          const hierarchyChrome = MDHierarchy.hierarchyChrome;
+          hierarchyChrome ? resolve(hierarchyChrome) : resolve(MDHierarchy.asyncHierarchyChrome())
+        },
+        300)
+    )
+  }
+
+  static hierarchyToggleClickHandler() {
+    MDHierarchy.detachHierarchyToggleClickListener();
+    MDHierarchy.disablePageScroll();
+    let hierarchyChrome = MDHierarchy.hierarchyChrome;
+    if (!hierarchyChrome) {
+      hierarchyChrome = MDHierarchy.asyncHierarchyChrome();
+      hierarchyChrome.then(MDHierarchy.attachChromeCloseListener)
+    } else {
+      MDHierarchy.attachChromeCloseListener(hierarchyChrome)
     }
   }
-  static noScroll(){
-    document.querySelector('body').setAttribute('style','overflow:hidden !important');
+
+  static detachHierarchyToggleClickListener() {
+    MDHierarchy.hierarchyToggle.removeEventListener('click', MDHierarchy.hierarchyToggleClickHandler);
   }
-  static scroll(){
-    document.querySelector('body').setAttribute('style','');
+
+
+  static attachChromeCloseListener(hierarchyChrome) {
+    hierarchyChrome.addEventListener('click', MDHierarchy.onChromeClose)
+  }
+
+  static onChromeClose(event) {
+    const cancel    = MDHierarchy.cancelButton,
+          apply     = MDHierarchy.applyButton,
+          chrome    = MDHierarchy.hierarchyChrome,
+          clickedEl = event.path[0];
+
+    if ([chrome, cancel, apply].indexOf(clickedEl) > -1) {
+      if (clickedEl == chrome) {
+        cancel.click();
+      } else {
+        MDHierarchy.enablePageScroll();
+      }
+    }
+  }
+
+  static get cancelButton() {
+    return MDHierarchy.hierarchyChrome.querySelector('.dd-cancel')
+  }
+
+  static get applyButton() {
+    return MDHierarchy.hierarchyChrome.querySelector('.dd-button-select')
+  }
+
+  static disablePageScroll() {
+    document.querySelector('body').setAttribute('style', 'overflow:hidden !important');
+  }
+
+  static enablePageScroll() {
+    document.querySelector('body').removeAttribute('style');
   }
 }
 

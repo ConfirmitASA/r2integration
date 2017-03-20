@@ -44,7 +44,7 @@ import HeaderScroller from "../r2/header-makeHeaderScrollable";
 
 class MenuTransformer{
   /**
-   * This class sets up a listener to detect whether the viewport matches the max-width set up in `breakpoint` and based on existence of an integration-iframe
+   * This class sets up a listener to detect whether the viewport matches the max-width set up in `breakpoint` and based on existence of an integration-iframeEl
    * sets up heade scrollers or just swaps the header into horizontal or sidebar navigation modes
    * @param {Number} [breakpoint=768] - max-width of device viewport that is considered to be a mobile device and hosts a mobile sidebar.
    * @requires MediaQuery
@@ -52,23 +52,23 @@ class MenuTransformer{
    * @requires HeaderScroller
    * */
   constructor(breakpoint=768){
-    this.iframe = document.querySelector('.r2dashboard');
+    this.iframeEl = document.querySelector('.r2dashboard');
 
     this.header = document.querySelector('.reportal-bar');
 
     // if it's integration page - do scrolling
-    if(this.iframe){
-      document.querySelector('.body-wrapper').classList.add('integration-mode'); //reverse layout to make header appear above iframe
+    if(this.iframeEl){
+      document.querySelector('.body-wrapper').classList.add('integration-mode'); //reverse layout to make header appear above iframeEl
 
       this.pScroller = new Promise((resolve,reject)=>{
         let makeHeaderScrollable;
-        if(this.iframe.contentWindow.location.href!='about:blank'){
-          makeHeaderScrollable = this.makeHeaderScrollable(this.iframe.contentWindow);
+        if(this.iframeEl.contentWindow.location.href!='about:blank'){
+          makeHeaderScrollable = this.makeHeaderScrollable(this.iframeEl.contentWindow);
 
 
           resolve(makeHeaderScrollable); //resolve to the instance of `HeaderScroller`
         } else {
-          this.iframe.addEventListener('load',e=>{
+          this.iframeEl.addEventListener('load',e=>{
             makeHeaderScrollable = this.makeHeaderScrollable(e.target.contentWindow); //initialise makeHeaderScrollable
             resolve(makeHeaderScrollable); //resolve to the instance of `HeaderScroller`
           });
@@ -94,7 +94,7 @@ class MenuTransformer{
    * */
   swapHeader(header){
     this.header = header;
-    if(this.iframe &amp;&amp; this.pScroller){
+    if(this.iframeEl &amp;&amp; this.pScroller){
       this.pScroller.then(hs=>hs.header = header);
     }
   }
@@ -102,11 +102,11 @@ class MenuTransformer{
 
   /**
    * Function that initialises makeHeaderScrollable on the header element
-   * @param {Window} w - contentWindow object of the iframe
+   * @param {Window} w - contentWindow object of the iframeEl
    * @returns {HeaderScroller} Returns `HeaderScroller` instance
    * */
   makeHeaderScrollable(w){
-    console.log('r2 iframe loaded');
+    console.log('r2 iframeEl loaded');
 
     // quick hack to hide a black editor bar
 
