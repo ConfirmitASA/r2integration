@@ -7,5 +7,5 @@ window.addEventListener('DOMContentLoaded',()=>{
   window.Reportal.state = window.Reportal.state || {};
   let state = window.Reportal.state;
   state.hierarchy = new MDHierarchy(); //setup listeners for hierarchy component on open and scrim click
-  state.menuTransformer = new MenuTransformer(); //setup listeners for hierarchy component on open and scrim click
+  state.menuTransformer = new MenuTransformer();
 });

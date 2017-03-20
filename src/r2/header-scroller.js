@@ -1,86 +1,93 @@
-
-class HeaderScroller{
+class HeaderScroller {
   /**
-   * `HeaderScroller` is a class that listens to `iframe`'s window.scroll event and scrolls the `header` when the iframe is scrolled
-   * @param {Window} win - iframe.contentWindow
-   * @param {HTMLElement} header - header element that needs to be scrolled
+   * `HeaderScroller` is a class that listens to `iframe`'s contentWindow.scroll event and scrolls the `reportalHeaderHTMLElement` when the iframe is scrolled
+   * @param {Window} contentWindow - iframe.contentWindow
+   * @param {HTMLElement} reportalHeaderHTMLElement - reportalHeaderHTMLElement element that needs to be scrolled
    * */
-  constructor(win,header){
-    win.requestAnimationFrame = win.requestAnimationFrame || win.mozRequestAnimationFrame || win.webkitRequestAnimationFrame || win.msRequestAnimationFrame;
+  constructor(contentWindow, reportalHeaderHTMLElement) {
+    contentWindow.requestAnimationFrame =
+      contentWindow.requestAnimationFrame
+      || contentWindow.mozRequestAnimationFrame
+      || contentWindow.webkitRequestAnimationFrame
+      || contentWindow.msRequestAnimationFrame;
 
-    this._meta = {
-      ticking:false,
-      offsetHeight:null,
-      header:null,
-      lastScrollY:0,
-      window:win
+    this._meta  = {
+      topOffset    : null,
+      ticking      : false,
+      offsetHeight : null,
+      header       : null,
+      lastScrollY  : 0,
+      contentWindow: contentWindow
     };
-    this.header = header;
+    this.header = reportalHeaderHTMLElement;
+    console.log(this._meta.contentWindow);
+    this._scrollCallback = this._scrollCallback.bind(this);
   }
 
-  get header(){
+  get header() {
     return this._meta.header;
   }
-  set header(val){
+
+  set header(headerElement) {
     let offset;
-    if(this.header!=null){
-      offset = `${this._meta.header.style.top}px`;
-      this._meta.header.style.top = "0px";
-      this._meta.header.classList.remove('scrollable-header');
-      this.detachListeners();
+    if (this.header != null) {
+      this._meta.topOffset = this.headerTopOffset;
+      this._resetHeader();
     }
-    this._meta.header = val;
-    this._meta.header.style.top = offset;
-    this._meta.header.classList.add('scrollable-header');
-    this._meta.offsetHeight = this._meta.header.offsetHeight; //calculate header height
-    this._meta.window.document.querySelector('body').style.marginTop = this._meta.header.offsetHeight + "px";
+    this._meta.header       = headerElement;
+    this._meta.offsetHeight = headerElement.offsetHeight;
+    this._configureHeader();
+    this._setHeaderOffsetInIframe();
+  }
+
+  get headerTopOffset() {
+    return this.header.style.top + 'px';
+  }
+
+  _resetHeader() {
+    const header = this.header;
+    header.classList.remove('scrollable-header');
+    header.style.top = "0px";
+    this.detachListeners();
+  }
+
+  _configureHeader() {
+    const header = this.header;
+    header.classList.add('scrollable-header');
+    header.style.top = this._meta.topOffset;
     this.attachListeners();
   }
 
-  requestTick(callback){
-    if(!this._meta.ticking) {
+  _setHeaderOffsetInIframe() {
+    const iframeBody           = this._meta.contentWindow.document.querySelector('body');
+    iframeBody.style.marginTop = this._meta.offsetHeight + "px";
+  }
+
+  requestTick(callback) {
+    if (!this._meta.ticking) {
       requestAnimationFrame(callback);
       this._meta.ticking = true;
     }
   }
 
-  attachListeners(){
-    let win = this._meta.window;
-    win.addEventListener("scroll", this.scrollFixed.bind(this), false); // attach a resize listener to resize the header
-    //win.addEventListener("scroll", this.resizeFixed.bind(this), false); // attach a resize listener to resize the header
-  }
-  detachListeners(){
-    let win = this._meta.window;
-    win.removeEventListener("scroll", this.scrollFixed); // attach a resize listener to resize the header
-    //win.removeEventListener("scroll", this.resizeFixed); // attach a resize listener to resize the header
+  attachListeners() {
+    const scrollHeader = this._scrollFixed.bind(this);
+    this._meta.contentWindow.addEventListener("scroll", scrollHeader, false);
   }
 
-
-  /**
-   * Calculates widths for all columns in the fixed header based on the `source`
-   * */
-  resizeFixed(){
-    this.requestTick(()=>{
-      this._meta.offsetHeight = this.header.offsetHeight;
-      this._meta.ticking=false;
-      this.scrollFixed(); // to compensate top offset in case after resize the table is less in height and top has changed
-    })
+  detachListeners() {
+    this._meta.contentWindow.removeEventListener("scroll", this._scrollFixed);
   }
 
-  /**
-   * Displays a fixed header when the table header is scrolled off the screen
-   * */
-  scrollFixed() {
-    //console.log(this._meta.window);
-    this._meta.lastScrollY = this._meta.window.pageYOffset;
-    this.requestTick(this.constructor._scrollCallback.bind(this));
+  _scrollFixed() {
+    this._meta.lastScrollY = this._meta.contentWindow.pageYOffset;
+    this.requestTick(this._scrollCallback);
   }
 
-  static _scrollCallback(){
-    let offset = this._meta.lastScrollY,
-      offsetTop = this._meta.offsetHeight;
-    this.header.style.top=-offset+'px';
-    this._meta.ticking=false;
+  _scrollCallback() {
+    let offset            = this._meta.lastScrollY;
+    this.header.style.top = -offset + 'px';
+    this._meta.ticking    = false;
   }
 }
 

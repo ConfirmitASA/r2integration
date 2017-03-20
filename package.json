@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "flexboxLayout": "github:confirmitasa/flexboxLayout",
-    "media-query": "github:confirmitasa/media-query"
+    "media-query": "github:confirmitasa/media-query",
+    "r-loading-animation": "github:confirmitasa/r-loading-animation"
   }
 }

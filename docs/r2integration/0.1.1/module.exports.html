@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Global - Documentation</title>
+    <title>exports - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -27,7 +27,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Global</h1>
+    <h1 class="page-title">exports</h1>
 
 
 
@@ -40,7 +40,7 @@
 <header>
 
         <h2>
-
+        exports
         </h2>
 
 
@@ -51,8 +51,22 @@
 
 
 
+
+
+    <h4 class="name" id="exports"><span class="type-signature"></span>new exports<span class="signature">(win, header)</span><span class="type-signature"></span></h4>
+
+
+
+
+
+
 <dl class="details">
 
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="r2_header-scroller.js.html">r2/header-makeHeaderScrollable.js</a>, <a href="r2_header-scroller.js.html#line8">line 8</a>
+    </li></ul></dd>
 
 
 
@@ -85,6 +99,104 @@
 
 
 </dl>
+
+
+
+
+
+<div class="description">
+    <p><code>HeaderScroller</code> is a class that listens to <code>iframe</code>'s contentWindow.scroll event and scrolls the <code>header</code> when the iframe is scrolled</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+
+
+<table class="params">
+    <thead>
+    <tr>
+
+        <th>Name</th>
+
+
+        <th>Type</th>
+
+
+
+
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+
+        <tr>
+
+                <td class="name"><code>win</code></td>
+
+
+            <td class="type">
+
+
+<span class="param-type">Window</span>
+
+
+
+            </td>
+
+
+
+
+
+            <td class="description last"><p>iframe.contentWindow</p></td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>header</code></td>
+
+
+            <td class="type">
+
+
+<span class="param-type">HTMLElement</span>
+
+
+
+            </td>
+
+
+
+
+
+            <td class="description last"><p>header element that needs to be scrolled</p></td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -94,178 +206,6 @@
 
 
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <h3 class="subsection-title">Methods</h3>
-
-
-
-
-
-
-    <h4 class="name" id="resizeFixed"><span class="type-signature"></span>resizeFixed<span class="signature">()</span><span class="type-signature"></span></h4>
-
-
-
-
-
-
-<dl class="details">
-
-
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="r2_header-scroller.js.html">r2/header-makeHeaderScrollable.js</a>, <a href="r2_header-scroller.js.html#line62">line 62</a>
-    </li></ul></dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Calculates widths for all columns in the fixed header based on the <code>source</code></p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h4 class="name" id="scrollFixed"><span class="type-signature"></span>_scrollFixed<span class="signature">()</span><span class="type-signature"></span></h4>
-
-
-
-
-
-
-<dl class="details">
-
-
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="r2_header-scroller.js.html">r2/header-makeHeaderScrollable.js</a>, <a href="r2_header-scroller.js.html#line73">line 73</a>
-    </li></ul></dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Displays a fixed header when the table header is scrolled off the screen</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

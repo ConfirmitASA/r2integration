@@ -14,7 +14,6 @@ class MenuTransformer{
    * */
   constructor(breakpoint=768){
     this.iframe = document.querySelector('.r2dashboard');
-
     this.header = document.querySelector('.reportal-bar');
 
     // if it's integration page - do scrolling
@@ -22,23 +21,21 @@ class MenuTransformer{
       document.querySelector('.body-wrapper').classList.add('integration-mode'); //reverse layout to make header appear above iframe
 
       this.pScroller = new Promise((resolve,reject)=>{
-        let scroller;
-        if(this.iframe.contentWindow.location.href!='about:blank'){
-          scroller = this.scroller(this.iframe.contentWindow);
-
-
-          resolve(scroller); //resolve to the instance of `HeaderScroller`
+        let headerScroller;
+        if(!this.isBlankIframe){
+          headerScroller = this.makeHeaderScrollable(this.iframe.contentWindow);
+          resolve(headerScroller); //resolve to the instance of `HeaderScroller`
         } else {
           this.iframe.addEventListener('load',e=>{
-            scroller = this.scroller(e.target.contentWindow); //initialise scroller
-            resolve(scroller); //resolve to the instance of `HeaderScroller`
+            headerScroller = this.makeHeaderScrollable(e.target.contentWindow); //initialise headerScroller
+            resolve(headerScroller); //resolve to the instance of `HeaderScroller`
           });
         }
       });
     }
     this.sidenav = new SideNav();
 
-    this.mq = new MediaQuery({query:`max-width:${breakpoint}px`},(matches)=>{
+    this.mediaQuery = new MediaQuery({query:`max-width:${breakpoint}px`},(matches)=>{
       console.log(matches);
       if(!matches){ // if desktop
         this.swapHeader(document.querySelector('.reportal-bar'));
@@ -48,6 +45,14 @@ class MenuTransformer{
         this.sidenav.addEventListeners();
       }
     },this);
+  }
+
+  makeHeaderScrollable(iframeContentWindow){
+    return this.header && new HeaderScroller(iframeContentWindow,this.header);
+  }
+
+  get isBlankIframe(){
+    return this.iframe.contentWindow.location.href==='about:blank'
   }
 
   /**
@@ -61,24 +66,6 @@ class MenuTransformer{
   }
 
 
-  /**
-   * Function that initialises scroller on the header element
-   * @param {Window} w - window object of the iframe
-   * @returns {HeaderScroller} Returns `HeaderScroller` instance
-   * */
-  scroller(w){
-    console.log('r2 iframe loaded');
-
-    // quick hack to hide a black editor bar
-
-    let rHeader = this.header,
-      scroller;
-    if(rHeader){
-      scroller = new HeaderScroller(w,rHeader);
-      console.log(scroller);
-    }
-    return scroller;
-  }
 }
 
 export default MenuTransformer;

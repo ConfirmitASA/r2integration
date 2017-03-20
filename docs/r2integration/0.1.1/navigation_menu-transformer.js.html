@@ -22,24 +22,24 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Detabinator.html">Detabinator</a></li><li><a href="HeaderScroller.html">HeaderScroller</a><ul class='methods'><li data-type='method'><a href="HeaderScroller.html#resizeFixed">resizeFixed</a></li><li data-type='method'><a href="HeaderScroller.html#scrollFixed">scrollFixed</a></li></ul></li><li><a href="MDHierarchy.html">MDHierarchy</a></li><li><a href="MenuTransformer.html">MenuTransformer</a><ul class='methods'><li data-type='method'><a href="MenuTransformer.html#scroller">scroller</a></li><li data-type='method'><a href="MenuTransformer.html#swapHeader">swapHeader</a></li></ul></li><li><a href="SideNav.html">SideNav</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Detabinator.html">Detabinator</a></li><li><a href="HeaderScroller.html">HeaderScroller</a><ul class='methods'><li data-type='method'><a href="HeaderScroller.html#resizeFixed">resizeFixed</a></li><li data-type='method'><a href="HeaderScroller.html#scrollFixed">_scrollFixed</a></li></ul></li><li><a href="MDHierarchy.html">MDHierarchy</a></li><li><a href="MenuTransformer.html">MenuTransformer</a><ul class='methods'><li data-type='method'><a href="MenuTransformer.html#scroller">makeHeaderScrollable</a></li><li data-type='method'><a href="MenuTransformer.html#swapHeader">swapHeader</a></li></ul></li><li><a href="SideNav.html">SideNav</a></li></ul>
 </nav>
 
 <div id="main">
-    
+
     <h1 class="page-title">navigation/menu-transformer.js</h1>
-    
-
-    
 
 
 
-    
+
+
+
+
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import SideNav from "../side-nav/side-nav";
 import MediaQuery from "media-query";
-import HeaderScroller from "../r2/header-scroller";
+import HeaderScroller from "../r2/header-makeHeaderScrollable";
 
 
 class MenuTransformer{
@@ -61,23 +61,23 @@ class MenuTransformer{
       document.querySelector('.body-wrapper').classList.add('integration-mode'); //reverse layout to make header appear above iframe
 
       this.pScroller = new Promise((resolve,reject)=>{
-        let scroller;
+        let makeHeaderScrollable;
         if(this.iframe.contentWindow.location.href!='about:blank'){
-          scroller = this.scroller(this.iframe.contentWindow);
+          makeHeaderScrollable = this.makeHeaderScrollable(this.iframe.contentWindow);
 
 
-          resolve(scroller); //resolve to the instance of `HeaderScroller`
+          resolve(makeHeaderScrollable); //resolve to the instance of `HeaderScroller`
         } else {
           this.iframe.addEventListener('load',e=>{
-            scroller = this.scroller(e.target.contentWindow); //initialise scroller
-            resolve(scroller); //resolve to the instance of `HeaderScroller`
+            makeHeaderScrollable = this.makeHeaderScrollable(e.target.contentWindow); //initialise makeHeaderScrollable
+            resolve(makeHeaderScrollable); //resolve to the instance of `HeaderScroller`
           });
         }
       });
     }
     this.sidenav = new SideNav();
 
-    this.mq = new MediaQuery({query:`max-width:${breakpoint}px`},(matches)=>{
+    this.mediaQuery = new MediaQuery({query:`max-width:${breakpoint}px`},(matches)=>{
       console.log(matches);
       if(!matches){ // if desktop
         this.swapHeader(document.querySelector('.reportal-bar'));
@@ -101,22 +101,22 @@ class MenuTransformer{
 
 
   /**
-   * Function that initialises scroller on the header element
-   * @param {Window} w - window object of the iframe
+   * Function that initialises makeHeaderScrollable on the header element
+   * @param {Window} w - contentWindow object of the iframe
    * @returns {HeaderScroller} Returns `HeaderScroller` instance
    * */
-  scroller(w){
+  makeHeaderScrollable(w){
     console.log('r2 iframe loaded');
 
     // quick hack to hide a black editor bar
 
     let rHeader = this.header,
-      scroller;
+      makeHeaderScrollable;
     if(rHeader){
-      scroller = new HeaderScroller(w,rHeader);
-      console.log(scroller);
+      makeHeaderScrollable = new HeaderScroller(w,rHeader);
+      console.log(makeHeaderScrollable);
     }
-    return scroller;
+    return makeHeaderScrollable;
   }
 }
 
