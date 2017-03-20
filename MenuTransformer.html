@@ -22,15 +22,15 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Detabinator.html">Detabinator</a></li><li><a href="HeaderScroller.html">HeaderScroller</a><ul class='methods'><li data-type='method'><a href="HeaderScroller.html#resizeFixed">resizeFixed</a></li><li data-type='method'><a href="HeaderScroller.html#scrollFixed">scrollFixed</a></li></ul></li><li><a href="MDHierarchy.html">MDHierarchy</a></li><li><a href="MenuTransformer.html">MenuTransformer</a><ul class='methods'><li data-type='method'><a href="MenuTransformer.html#scroller">scroller</a></li><li data-type='method'><a href="MenuTransformer.html#swapHeader">swapHeader</a></li></ul></li><li><a href="SideNav.html">SideNav</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Detabinator.html">Detabinator</a></li><li><a href="HeaderScroller.html">HeaderScroller</a><ul class='methods'><li data-type='method'><a href="HeaderScroller.html#resizeFixed">resizeFixed</a></li><li data-type='method'><a href="HeaderScroller.html#scrollFixed">_scrollFixed</a></li></ul></li><li><a href="MDHierarchy.html">MDHierarchy</a></li><li><a href="MenuTransformer.html">MenuTransformer</a><ul class='methods'><li data-type='method'><a href="MenuTransformer.html#scroller">makeHeaderScrollable</a></li><li data-type='method'><a href="MenuTransformer.html#swapHeader">swapHeader</a></li></ul></li><li><a href="SideNav.html">SideNav</a></li></ul>
 </nav>
 
 <div id="main">
-    
-    <h1 class="page-title">MenuTransformer</h1>
-    
 
-    
+    <h1 class="page-title">MenuTransformer</h1>
+
+
+
 
 
 
@@ -38,66 +38,66 @@
 <section>
 
 <header>
-    
+
         <h2>
         MenuTransformer
         </h2>
-        
-    
+
+
 </header>
 
 <article>
     <div class="container-overview">
-    
-        
 
-    
+
+
+
 
     <h4 class="name" id="MenuTransformer"><span class="type-signature"></span>new MenuTransformer<span class="signature">(breakpoint<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
-    
+
 
 
 
 
 <dl class="details">
 
-    
+
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="navigation_menu-transformer.js.html">navigation/menu-transformer.js</a>, <a href="navigation_menu-transformer.js.html#line15">line 15</a>
     </li></ul></dd>
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </dl>
 
 
@@ -120,70 +120,70 @@ sets up heade scrollers or just swaps the header into horizontal or sidebar navi
 
 
     <h5>Parameters:</h5>
-    
+
 
 <table class="params">
     <thead>
     <tr>
-        
+
         <th>Name</th>
-        
+
 
         <th>Type</th>
 
-        
-        <th>Attributes</th>
-        
 
-        
+        <th>Attributes</th>
+
+
+
         <th>Default</th>
-        
+
 
         <th class="last">Description</th>
     </tr>
     </thead>
 
     <tbody>
-    
+
 
         <tr>
-            
+
                 <td class="name"><code>breakpoint</code></td>
-            
+
 
             <td class="type">
-            
-                
+
+
 <span class="param-type">Number</span>
 
 
-            
+
             </td>
 
-            
+
                 <td class="attributes">
-                
+
                     &lt;optional><br>
-                
 
-                
 
-                
+
+
+
                 </td>
-            
 
-            
+
+
                 <td class="default">
-                
+
                     <code>768</code>
-                
+
                 </td>
-            
+
 
             <td class="description last"><p>max-width of device viewport that is considered to be a mobile device and hosts a mobile sidebar.</p></td>
         </tr>
 
-    
+
     </tbody>
 </table>
 
@@ -211,84 +211,84 @@ sets up heade scrollers or just swaps the header into horizontal or sidebar navi
 
 
 
-    
+
     </div>
 
-    
 
-    
+
+
         <h3 class="subsection-title">Requires</h3>
 
         <ul>
             <li>module:MediaQuery</li>
-        
+
             <li>module:SideNav</li>
-        
+
             <li>module:HeaderScroller</li>
         </ul>
-    
 
-    
 
-     
 
-    
 
-    
 
-    
+
+
+
+
+
+
         <h3 class="subsection-title">Methods</h3>
 
-        
-            
 
-    
 
-    <h4 class="name" id="scroller"><span class="type-signature"></span>scroller<span class="signature">(w)</span><span class="type-signature"> &rarr; {<a href="HeaderScroller.html">HeaderScroller</a>}</span></h4>
 
-    
+
+
+    <h4 class="name" id="scroller"><span class="type-signature"></span>makeHeaderScrollable<span class="signature">(w)</span><span class="type-signature"> &rarr; {<a href="HeaderScroller.html">HeaderScroller</a>}</span></h4>
+
+
 
 
 
 
 <dl class="details">
 
-    
+
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="navigation_menu-transformer.js.html">navigation/menu-transformer.js</a>, <a href="navigation_menu-transformer.js.html#line69">line 69</a>
     </li></ul></dd>
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </dl>
 
 
@@ -296,7 +296,7 @@ sets up heade scrollers or just swaps the header into horizontal or sidebar navi
 
 
 <div class="description">
-    <p>Function that initialises scroller on the header element</p>
+    <p>Function that initialises makeHeaderScrollable on the header element</p>
 </div>
 
 
@@ -310,50 +310,50 @@ sets up heade scrollers or just swaps the header into horizontal or sidebar navi
 
 
     <h5>Parameters:</h5>
-    
+
 
 <table class="params">
     <thead>
     <tr>
-        
+
         <th>Name</th>
-        
+
 
         <th>Type</th>
 
-        
 
-        
+
+
 
         <th class="last">Description</th>
     </tr>
     </thead>
 
     <tbody>
-    
+
 
         <tr>
-            
+
                 <td class="name"><code>w</code></td>
-            
+
 
             <td class="type">
-            
-                
+
+
 <span class="param-type">Window</span>
 
 
-            
+
             </td>
 
-            
 
-            
 
-            <td class="description last"><p>window object of the iframe</p></td>
+
+
+            <td class="description last"><p>contentWindow object of the iframe</p></td>
         </tr>
 
-    
+
     </tbody>
 </table>
 
@@ -372,7 +372,7 @@ sets up heade scrollers or just swaps the header into horizontal or sidebar navi
 
 <h5>Returns:</h5>
 
-        
+
 <div class="param-desc">
     <p>Returns <code>HeaderScroller</code> instance</p>
 </div>
@@ -384,66 +384,66 @@ sets up heade scrollers or just swaps the header into horizontal or sidebar navi
         Type
     </dt>
     <dd>
-        
+
 <span class="param-type"><a href="HeaderScroller.html">HeaderScroller</a></span>
 
 
     </dd>
 </dl>
 
-    
 
 
-        
-            
 
-    
+
+
+
+
 
     <h4 class="name" id="swapHeader"><span class="type-signature"></span>swapHeader<span class="signature">()</span><span class="type-signature"></span></h4>
 
-    
+
 
 
 
 
 <dl class="details">
 
-    
+
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="navigation_menu-transformer.js.html">navigation/menu-transformer.js</a>, <a href="navigation_menu-transformer.js.html#line56">line 56</a>
     </li></ul></dd>
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </dl>
 
 
@@ -478,12 +478,12 @@ sets up heade scrollers or just swaps the header into horizontal or sidebar navi
 
 
 
-        
-    
 
-    
 
-    
+
+
+
+
 </article>
 
 </section>

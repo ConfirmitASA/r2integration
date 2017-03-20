@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>side-nav/side-nav.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Detabinator.html">Detabinator</a></li><li><a href="HeaderScroller.html">HeaderScroller</a><ul class='methods'><li data-type='method'><a href="HeaderScroller.html#resizeFixed">resizeFixed</a></li><li data-type='method'><a href="HeaderScroller.html#scrollFixed">_scrollFixed</a></li></ul></li><li><a href="MDHierarchy.html">MDHierarchy</a></li><li><a href="MenuTransformer.html">MenuTransformer</a><ul class='methods'><li data-type='method'><a href="MenuTransformer.html#scroller">makeHeaderScrollable</a></li><li data-type='method'><a href="MenuTransformer.html#swapHeader">swapHeader</a></li></ul></li><li><a href="SideNav.html">SideNav</a></li></ul>
+</nav>
+
+<div id="main">
+
+    <h1 class="page-title">side-nav/side-nav.js</h1>
+
+
+
+
+
+
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ *
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import Detabinator from "./detabinator";
+
+class SideNav {
+  /**
+   * A class that sets up a sidebar that is dismissed on scrim-click or on swipe and is opend on hamburger-icon click
+   * */
+  constructor () {
+    this.showButtonEl = document.querySelector('.js-menu-show');
+    this.hideButtonEl = document.querySelector('.js-menu-hide');
+    this.sideNavEl = document.querySelector('.js-side-nav');
+    this.sideNavContainerEl = document.querySelector('.js-side-nav-container');
+    // Control whether the container's children can be focused
+    // Set initial state to inert since the drawer is offscreen
+    this.detabinator = new Detabinator(this.sideNavContainerEl);
+    this.detabinator.inert = true;
+
+    this.showSideNav = this.showSideNav.bind(this);
+    this.hideSideNav = this.hideSideNav.bind(this);
+    this.constructor.blockClicks = this.constructor.blockClicks.bind(this);
+    this.onTouchStart = this.onTouchStart.bind(this);
+    this.onTouchMove = this.onTouchMove.bind(this);
+    this.onTouchEnd = this.onTouchEnd.bind(this);
+    this.onTransitionEnd = this.onTransitionEnd.bind(this);
+    this.update = this.update.bind(this);
+
+    this.startX = 0;
+    this.currentX = 0;
+    this.touchingSideNav = false;
+
+    this.supportsPassive = undefined;
+    //this.addEventListeners();
+  }
+
+  // apply passive event listening if it's supported
+  applyPassive () {
+    if (this.supportsPassive !== undefined) {
+      return this.supportsPassive ? {passive: true} : false;
+    }
+    // feature detect
+    let isSupported = false;
+    try {
+      document.addEventListener('test', null, {get passive () {
+        isSupported = true;
+      }});
+    } catch (e) { }
+    this.supportsPassive = isSupported;
+    return this.applyPassive();
+  }
+
+  addEventListeners () {
+    this.showButtonEl.addEventListener('click', this.showSideNav);
+    this.hideButtonEl.addEventListener('click', this.hideSideNav);
+    this.sideNavEl.addEventListener('click', this.hideSideNav);
+    this.sideNavContainerEl.addEventListener('click', this.constructor.blockClicks);
+
+    this.sideNavEl.addEventListener('touchstart', this.onTouchStart, this.applyPassive());
+    this.sideNavEl.addEventListener('touchmove', this.onTouchMove, this.applyPassive());
+    this.sideNavEl.addEventListener('touchend', this.onTouchEnd);
+  }
+
+  removeEventListeners () {
+    this.showButtonEl.removeEventListener('click', this.showSideNav);
+    this.hideButtonEl.removeEventListener('click', this.hideSideNav);
+    this.sideNavEl.removeEventListener('click', this.hideSideNav);
+    this.sideNavContainerEl.removeEventListener('click', this.constructor.blockClicks);
+
+    this.sideNavEl.removeEventListener('touchstart', this.onTouchStart);
+    this.sideNavEl.removeEventListener('touchmove', this.onTouchMove);
+    this.sideNavEl.removeEventListener('touchend', this.onTouchEnd);
+  }
+
+  onTouchStart (evt) {
+    if (!this.sideNavEl.classList.contains('side-nav--visible'))
+      return;
+    //TODO:support sidebar scrolling as well
+    this.startX = evt.touches[0].pageX;
+    this.currentX = this.startX;
+
+    this.touchingSideNav = true;
+    requestAnimationFrame(this.update);
+  }
+
+  onTouchMove (evt) {
+    if (!this.touchingSideNav)
+      return;
+
+    this.currentX = evt.touches[0].pageX;
+  }
+
+  onTouchEnd (evt) {
+    if (!this.touchingSideNav)
+      return;
+
+    this.touchingSideNav = false;
+
+    const translateX = Math.min(0, this.currentX - this.startX);
+    this.sideNavContainerEl.style.transform = '';
+
+    if (translateX &lt; 0) {
+      this.hideSideNav();
+    }
+  }
+
+  update () {
+    if (!this.touchingSideNav)
+      return;
+
+    requestAnimationFrame(this.update);
+
+    const translateX = Math.min(0, this.currentX - this.startX);
+    this.sideNavContainerEl.style.transform = `translateX(${translateX}px)`;
+  }
+
+  static blockClicks (evt) {
+    evt.stopPropagation();
+  }
+
+  onTransitionEnd (evt) {
+    this.sideNavEl.classList.remove('side-nav--animatable');
+    this.sideNavEl.removeEventListener('transitionend', this.onTransitionEnd);
+  }
+
+  showSideNav () {
+    document.querySelector('body').style.overflow="hidden";
+    this.sideNavEl.classList.add('side-nav--animatable');
+    this.sideNavEl.classList.add('side-nav--visible');
+    this.detabinator.inert = false;
+    this.sideNavEl.addEventListener('transitionend', this.onTransitionEnd);
+  }
+
+  hideSideNav () {
+    document.querySelector('body').style.overflow="auto";
+    this.sideNavEl.classList.add('side-nav--animatable');
+    this.sideNavEl.classList.remove('side-nav--visible');
+    this.detabinator.inert = true;
+    this.sideNavEl.addEventListener('transitionend', this.onTransitionEnd);
+  }
+}
+export default SideNav
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed Jan 11 2017 09:00:08 GMT+0300 (Russia TZ 2 Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
