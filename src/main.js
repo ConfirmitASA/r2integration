@@ -7,5 +7,5 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   window.Reportal = window.Reportal || {};
   window.Reportal.state = window.Reportal.state || {};
-  window.Reportal.state.menuTransformer = new MenuTransformer();
+  window.Reportal.state.menuTransformer = new MenuTransformer({breakpoint:768})
 });

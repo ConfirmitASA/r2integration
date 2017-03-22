@@ -1,6 +1,6 @@
 class HeaderScroller {
   /**
-   * `HeaderScroller` is a class that listens to `iframeEl`'s contentWindow.enablePageScroll event and scrolls the `reportalHeaderHTMLElement` when the iframeEl is scrolled
+   * `HeaderScroller` is a class that listens to `iframeEl`'s contentWindow scroll event and scrolls the `reportalHeaderHTMLElement` when the iframeEl is scrolled
    * @param {Window} contentWindow - iframeEl.contentWindow
    * @param {HTMLElement} reportalHeaderHTMLElement - reportalHeaderHTMLElement element that needs to be scrolled
    * */
