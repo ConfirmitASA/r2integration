@@ -78,7 +78,7 @@ class TransformMenuAt {
   }
 
   /**
-   * Function that sets this.desktopHeaderEl to a new HTMLElement and does the same for HeaderScroller
+   * Sets `this.currentHeader` to a new HTMLElement and does the same for `HeaderScroller.header`
    * */
   swapHeader(newHeader) {
     this.currentHeader = newHeader;
