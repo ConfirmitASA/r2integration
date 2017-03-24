@@ -21,6 +21,7 @@ class HeaderScroller {
     };
     this.header = reportalHeaderHTMLElement;
     this._scrollCallback = this._scrollCallback.bind(this);
+    this.attachListeners();
   }
 
   get header() {
@@ -40,26 +41,25 @@ class HeaderScroller {
   }
 
   get headerTopOffset() {
-    return this.header.style.top + 'px';
+    return this.header.style.top;
   }
 
   _resetHeader() {
     const header = this.header;
     header.classList.remove('scrollable-header');
-    header.style.top = "0px";
-    this.detachListeners();
+    header.style.top = "";
+   // this.detachListeners();
   }
 
   _configureHeader() {
     const header = this.header;
     header.classList.add('scrollable-header');
     header.style.top = this._meta.topOffset;
-    this.attachListeners();
   }
 
   _setHeaderOffsetInIframe() {
     const iframeBody           = this._meta.contentWindow.document.querySelector('body');
-    iframeBody.style.marginTop = this._meta.offsetHeight + "px";
+    iframeBody.style.paddingTop = this._meta.offsetHeight + "px";
   }
 
   requestTick(callback) {
@@ -70,12 +70,11 @@ class HeaderScroller {
   }
 
   attachListeners() {
-    const scrollHeader = this._scrollFixed.bind(this);
-    this._meta.contentWindow.addEventListener("enablePageScroll", scrollHeader, false);
+    this._meta.contentWindow.addEventListener("scroll", this._scrollFixed.bind(this), false);
   }
 
   detachListeners() {
-    this._meta.contentWindow.removeEventListener("enablePageScroll", this._scrollFixed);
+    this._meta.contentWindow.removeEventListener("scroll", this._scrollFixed);
   }
 
   _scrollFixed() {

@@ -1,11 +1,12 @@
 require('./main.css');
 import MDHierarchy from "./hierarchy/hierarchy";
-import MenuTransformer from "./navigation/menu-transformer";
+import TransformMenuAt from "./navigation/menu-transformer";
+
+window.Reportal = window.Reportal || {};
+window.Reportal.state = window.Reportal.state || {};
 
 window.addEventListener('DOMContentLoaded',()=>{
   MDHierarchy.upgrade();
 
-  window.Reportal = window.Reportal || {};
-  window.Reportal.state = window.Reportal.state || {};
-  window.Reportal.state.menuTransformer = new MenuTransformer({breakpoint:768})
+  window.Reportal.state.TransformMenuAt = new TransformMenuAt(768)
 });

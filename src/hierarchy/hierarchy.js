@@ -1,4 +1,4 @@
-class MDHierarchy {
+export default class MDHierarchy {
   /**
    * attaches a listener to a hierarchy popup when it's initialised to be able to close it on click-outside
    * */
@@ -78,4 +78,3 @@ class MDHierarchy {
   }
 }
 
-export default MDHierarchy;

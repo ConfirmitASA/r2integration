@@ -3,7 +3,7 @@ import MediaQuery from "media-query";
 import HeaderScroller from "../r2/header-scroller";
 
 
-class MenuTransformer {
+class TransformMenuAt {
   /**
    * This class sets up a listener to detect whether the viewport matches the max-width set up in `breakpoint` and based on existence of an integration-iframeEl
    * sets up heade scrollers or just swaps the header into horizontal or sidebar navigation modes
@@ -32,7 +32,7 @@ class MenuTransformer {
       this.swapHeaderAndIframe();
       this.headerScrollerInst = this.makeHeaderRespondToIframeScroll();
     }
-
+    this.handleBreakpointMatch = this.handleBreakpointMatch.bind(this);
     this.sidenav = new SideNav();
     this.mediaQuery = new MediaQuery({query: `max-width:${breakpoint}px`}, this.handleBreakpointMatch, this);
   }
@@ -41,8 +41,8 @@ class MenuTransformer {
     document.querySelector('.body-wrapper').classList.add('integration-mode');
   }
 
-  handleBreakpointMatch(aboveBreakpoint) {
-    if (!aboveBreakpoint) {
+  handleBreakpointMatch(belowBreakpoint) {
+    if (!belowBreakpoint) {
       this.swapHeader(this.desktopHeaderEl);
       this.sidenav.removeEventListeners();
     } else {
@@ -56,15 +56,17 @@ class MenuTransformer {
       if (!this.isIframeURLEmpty) {
         resolve(this.makeHeaderScrollable(this.iframeEl.contentWindow));
       } else {
-        this.iframeEl.addEventListener('load', e =>
-          resolve(this.makeHeaderScrollable(e.target.contentWindow))
+        this.iframeEl.addEventListener('load', e =>{
+          return resolve(this.makeHeaderScrollable(e.target.contentWindow))
+
+        }
         );
       }
     });
   }
 
   makeHeaderScrollable(iframeContentWindow) {
-    return this.desktopHeaderEl && new HeaderScroller(iframeContentWindow, this.desktopHeaderEl);
+    return this.currentHeader && new HeaderScroller(iframeContentWindow, this.currentHeader);
   }
 
   get isIframeURLEmpty() {
@@ -82,4 +84,4 @@ class MenuTransformer {
   }
 }
 
-export default MenuTransformer;
+export default TransformMenuAt;

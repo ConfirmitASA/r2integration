@@ -7,7 +7,8 @@ module.exports = {
   },
   output: {
     path: "./dist",
-    filename: name+".bundle.js"
+    filename: name+".bundle.js",
+    libraryTarget: 'umd'
   },
   module: {
     loaders: [{
