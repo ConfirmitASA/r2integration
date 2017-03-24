@@ -28,13 +28,17 @@ class TransformMenuAt {
     this.mobileHeaderEl  = document.querySelector(mobileHeaderClassName);
     this.currentHeader = null;
 
-    if (this.iframeEl){// if it's integration page - do scrolling
+    if (this.isIntegrationMode){// if it's integration page - do scrolling
       this.swapHeaderAndIframe();
       this.headerScrollerInst = this.makeHeaderRespondToIframeScroll();
     }
     this.handleBreakpointMatch = this.handleBreakpointMatch.bind(this);
     this.sidenav = new SideNav();
     this.mediaQuery = new MediaQuery({query: `max-width:${breakpoint}px`}, this.handleBreakpointMatch, this);
+  }
+
+  get isIntegrationMode(){
+    return !!this.iframeEl
   }
 
   swapHeaderAndIframe(){
