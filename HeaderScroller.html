@@ -22,15 +22,15 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Detabinator.html">Detabinator</a></li><li><a href="HeaderScroller.html">HeaderScroller</a><ul class='methods'><li data-type='method'><a href="HeaderScroller.html#resizeFixed">resizeFixed</a></li><li data-type='method'><a href="HeaderScroller.html#scrollFixed">_scrollFixed</a></li></ul></li><li><a href="MDHierarchy.html">MDHierarchy</a></li><li><a href="MenuTransformer.html">MenuTransformer</a><ul class='methods'><li data-type='method'><a href="MenuTransformer.html#scroller">makeHeaderScrollable</a></li><li data-type='method'><a href="MenuTransformer.html#swapHeader">swapHeader</a></li></ul></li><li><a href="SideNav.html">SideNav</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Detabinator.html">Detabinator</a></li><li><a href="HeaderScroller.html">HeaderScroller</a></li><li><a href="SideNav.html">SideNav</a></li><li><a href="TransformMenuAt.html">TransformMenuAt</a><ul class='methods'><li data-type='method'><a href="TransformMenuAt.html#swapHeader">swapHeader</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#upgrade">upgrade</a></li></ul>
 </nav>
 
 <div id="main">
-
+    
     <h1 class="page-title">HeaderScroller</h1>
+    
 
-
-
+    
 
 
 
@@ -38,66 +38,66 @@
 <section>
 
 <header>
-
+    
         <h2>
         HeaderScroller
         </h2>
-
-
+        
+    
 </header>
 
 <article>
     <div class="container-overview">
+    
+        
 
+    
 
+    <h4 class="name" id="HeaderScroller"><span class="type-signature"></span>new HeaderScroller<span class="signature">(contentWindow, reportalHeaderHTMLElement)</span><span class="type-signature"></span></h4>
 
-
-
-    <h4 class="name" id="HeaderScroller"><span class="type-signature"></span>new HeaderScroller<span class="signature">(win, header)</span><span class="type-signature"></span></h4>
-
-
+    
 
 
 
 
 <dl class="details">
 
-
+    
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="r2_header-scroller.js.html">r2/header-makeHeaderScrollable.js</a>, <a href="r2_header-scroller.js.html#line8">line 8</a>
+        <a href="r2_header-scroller.js.html">r2/header-scroller.js</a>, <a href="r2_header-scroller.js.html#line7">line 7</a>
     </li></ul></dd>
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 </dl>
 
 
@@ -105,7 +105,7 @@
 
 
 <div class="description">
-    <p><code>HeaderScroller</code> is a class that listens to <code>iframeEl</code>'s contentWindow.enablePageScroll event and scrolls the <code>header</code> when the iframeEl is scrolled</p>
+    <p><code>HeaderScroller</code> is a class that listens to <code>iframeEl</code>'s contentWindow scroll event and scrolls the <code>reportalHeaderHTMLElement</code> when the iframeEl is scrolled</p>
 </div>
 
 
@@ -119,73 +119,73 @@
 
 
     <h5>Parameters:</h5>
-
+    
 
 <table class="params">
     <thead>
     <tr>
-
+        
         <th>Name</th>
-
+        
 
         <th>Type</th>
 
+        
 
-
-
+        
 
         <th class="last">Description</th>
     </tr>
     </thead>
 
     <tbody>
-
+    
 
         <tr>
-
-                <td class="name"><code>win</code></td>
-
+            
+                <td class="name"><code>contentWindow</code></td>
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">Window</span>
 
 
-
+            
             </td>
 
+            
 
-
-
+            
 
             <td class="description last"><p>iframeEl.contentWindow</p></td>
         </tr>
 
-
+    
 
         <tr>
-
-                <td class="name"><code>header</code></td>
-
+            
+                <td class="name"><code>reportalHeaderHTMLElement</code></td>
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">HTMLElement</span>
 
 
-
+            
             </td>
 
+            
 
+            
 
-
-
-            <td class="description last"><p>header element that needs to be scrolled</p></td>
+            <td class="description last"><p>reportalHeaderHTMLElement element that needs to be scrolled</p></td>
         </tr>
 
-
+    
     </tbody>
 </table>
 
@@ -204,198 +204,26 @@
 
 
 
-
+    
     </div>
 
+    
 
+    
 
+    
 
+     
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-        <h3 class="subsection-title">Methods</h3>
-
-
-
-
-
-
-    <h4 class="name" id="resizeFixed"><span class="type-signature"></span>resizeFixed<span class="signature">()</span><span class="type-signature"></span></h4>
-
-
-
-
-
-
-<dl class="details">
-
-
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="r2_header-scroller.js.html">r2/header-makeHeaderScrollable.js</a>, <a href="r2_header-scroller.js.html#line62">line 62</a>
-    </li></ul></dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Calculates widths for all columns in the fixed header based on the <code>source</code></p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h4 class="name" id="scrollFixed"><span class="type-signature"></span>_scrollFixed<span class="signature">()</span><span class="type-signature"></span></h4>
-
-
-
-
-
-
-<dl class="details">
-
-
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="r2_header-scroller.js.html">r2/header-makeHeaderScrollable.js</a>, <a href="r2_header-scroller.js.html#line73">line 73</a>
-    </li></ul></dd>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Displays a fixed header when the table header is scrolled off the screen</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 </article>
 
 </section>
@@ -408,7 +236,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed Jan 11 2017 09:00:08 GMT+0300 (Russia TZ 2 Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Mar 24 2017 13:19:53 GMT+0300 (Russia TZ 2 Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

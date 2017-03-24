@@ -22,62 +22,101 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Detabinator.html">Detabinator</a></li><li><a href="HeaderScroller.html">HeaderScroller</a><ul class='methods'><li data-type='method'><a href="HeaderScroller.html#resizeFixed">resizeFixed</a></li><li data-type='method'><a href="HeaderScroller.html#scrollFixed">_scrollFixed</a></li></ul></li><li><a href="MDHierarchy.html">MDHierarchy</a></li><li><a href="MenuTransformer.html">MenuTransformer</a><ul class='methods'><li data-type='method'><a href="MenuTransformer.html#scroller">makeHeaderScrollable</a></li><li data-type='method'><a href="MenuTransformer.html#swapHeader">swapHeader</a></li></ul></li><li><a href="SideNav.html">SideNav</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Detabinator.html">Detabinator</a></li><li><a href="HeaderScroller.html">HeaderScroller</a></li><li><a href="SideNav.html">SideNav</a></li><li><a href="TransformMenuAt.html">TransformMenuAt</a><ul class='methods'><li data-type='method'><a href="TransformMenuAt.html#swapHeader">swapHeader</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#upgrade">upgrade</a></li></ul>
 </nav>
 
 <div id="main">
-
+    
     <h1 class="page-title">hierarchy/hierarchy.js</h1>
+    
+
+    
 
 
 
-
-
-
-
+    
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Created by IvanP on 07.12.2016.
- */
-
-class MDHierarchy {
+            <pre class="prettyprint source linenums"><code>export default class MDHierarchy {
   /**
    * attaches a listener to a hierarchy popup when it's initialised to be able to close it on click-outside
    * */
-  constructor(){
-    let btn = document.querySelector('.dd-target-button');
-    if(btn){
-      btn.addEventListener('click',e=>{
-        this.constructor.disablePageScroll();
-        let dd = btn.parentNode.querySelector('.dd-drilldown');
-        if(!dd){
-          setTimeout(()=>{
-            dd = btn.parentNode.querySelector('.dd-drilldown');
-            if(dd){
-              dd.addEventListener('click', closE=>{
-                let cancel = dd.querySelector('.dd-cancel'),
-                    apply = dd.querySelector('.dd-button-select');
-                if(closE.path[0]==dd || closE.path[0]==cancel || closE.path[0]==apply){
-                  if(closE.path[0]==dd){cancel.click();}
-                  this.constructor.enablePageScroll();
-                }
-              })
-            }
-          },300);
-        }
-      })
+  static upgrade() {
+    const hierarchyButton = MDHierarchy.hierarchyToggle;
+    hierarchyButton &amp;&amp; hierarchyButton.addEventListener('click', MDHierarchy.hierarchyToggleClickHandler)
+  }
+
+  static get hierarchyToggle() {
+    return document.querySelector('.dd-target-button');
+  }
+
+  static get hierarchyChrome() {
+    return MDHierarchy.hierarchyToggle.parentNode.querySelector('.dd-drilldown')
+  }
+
+  static asyncHierarchyChrome() {
+    return new Promise(resolve =>
+      setTimeout(() => {
+          const hierarchyChrome = MDHierarchy.hierarchyChrome;
+          hierarchyChrome ? resolve(hierarchyChrome) : resolve(MDHierarchy.asyncHierarchyChrome())
+        },
+        300)
+    )
+  }
+
+  static hierarchyToggleClickHandler() {
+    MDHierarchy.detachHierarchyToggleClickListener();
+    MDHierarchy.disablePageScroll();
+    let hierarchyChrome = MDHierarchy.hierarchyChrome;
+    if (!hierarchyChrome) {
+      hierarchyChrome = MDHierarchy.asyncHierarchyChrome();
+      hierarchyChrome.then(MDHierarchy.attachChromeCloseListener)
+    } else {
+      MDHierarchy.attachChromeCloseListener(hierarchyChrome)
     }
   }
-  static disablePageScroll(){
-    document.querySelector('body').setAttribute('style','overflow:hidden !important');
+
+  static detachHierarchyToggleClickListener() {
+    MDHierarchy.hierarchyToggle.removeEventListener('click', MDHierarchy.hierarchyToggleClickHandler);
   }
-  static enablePageScroll(){
-    document.querySelector('body').setAttribute('style','');
+
+
+  static attachChromeCloseListener(hierarchyChrome) {
+    hierarchyChrome.addEventListener('click', MDHierarchy.onChromeClose)
+  }
+
+  static onChromeClose(event) {
+    const cancel    = MDHierarchy.cancelButton,
+          apply     = MDHierarchy.applyButton,
+          chrome    = MDHierarchy.hierarchyChrome,
+          clickedEl = event.path[0];
+
+    if ([chrome, cancel, apply].indexOf(clickedEl) > -1) {
+      if (clickedEl == chrome) {
+        cancel.click();
+      } else {
+        MDHierarchy.enablePageScroll();
+      }
+    }
+  }
+
+  static get cancelButton() {
+    return MDHierarchy.hierarchyChrome.querySelector('.dd-cancel')
+  }
+
+  static get applyButton() {
+    return MDHierarchy.hierarchyChrome.querySelector('.dd-button-select')
+  }
+
+  static disablePageScroll() {
+    document.querySelector('body').setAttribute('style', 'overflow:hidden !important');
+  }
+
+  static enablePageScroll() {
+    document.querySelector('body').removeAttribute('style');
   }
 }
 
-export default MDHierarchy;
 </code></pre>
         </article>
     </section>
@@ -90,7 +129,7 @@ export default MDHierarchy;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed Jan 11 2017 09:00:08 GMT+0300 (Russia TZ 2 Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Mar 24 2017 13:19:53 GMT+0300 (Russia TZ 2 Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
