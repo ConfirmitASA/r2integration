@@ -33,10 +33,8 @@ class Detabinator {
       throw new Error('Missing required argument. new Detabinator needs an element reference');
     }
     this._inert = false;
-    this._focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframeEl, object, embed, [tabindex], [contenteditable]';
-    this._focusableElements = Array.from(
-      element.querySelectorAll(this._focusableElementsString)
-    );
+    this._focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex], [contenteditable]';
+    this._focusableElements = [].slice.call(element.querySelectorAll(this._focusableElementsString));
   }
 
   get inert() {

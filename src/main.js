@@ -1,4 +1,4 @@
-require('./main.css');
+import './main.css';
 import MDHierarchy from "./hierarchy/hierarchy";
 import TransformMenuAt from "./navigation/menu-transformer";
 

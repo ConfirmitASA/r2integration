@@ -8,13 +8,13 @@ module.exports = {
   output: {
     path: "./dist",
     filename: name+".bundle.js",
-    libraryTarget: 'umd'
+    //libraryTarget: 'umd'
   },
   module: {
     loaders: [{
       test: /\.js$/,
-      exclude: /(bower_components)/,
-      loader: 'babel',
+      exclude: /(bower_components|node_modules)/,
+      loader: 'babel-loader',
     }],
   },
   resolve: {

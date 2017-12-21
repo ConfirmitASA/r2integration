@@ -2,7 +2,7 @@
   "name": "r2integration",
   "version": "0.1.1",
   "description": "R2 integration into Reportal",
-  "main": "src/main.js",
+  "main": "dist/r2integration.bundle.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/ConfirmitASA/ES6_test_framework_boilerplate.git"
@@ -22,14 +22,19 @@
   "author": "ConfirmitASA",
   "license": "",
   "devDependencies": {
-    "babel-core": "^6.4.0",
-    "babel-eslint": "^4.1.6",
+    "babel-cli": "6.24.1",
+    "babel-core": "6.24.1",
+    "babel-eslint": "7.2.3",
     "babel-istanbul": "^0.6.0",
     "babel-istanbul-loader": "^0.0.1",
-    "babel-loader": "^6.2.4",
-    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-loader": "7.1.0",
     "babel-plugin-istanbul": "^2.0.1",
-    "babel-preset-es2015": "^6.9.0",
+    "babel-plugin-react-transform": "2.0.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-es2015-modules-commonjs": "6.24.1",
+    "babel-plugin-dynamic-import-node": "1.0.2",
+    "babel-preset-env": "1.5.1",
+    "babel-preset-stage-0": "6.22.0",
     "css-loader": "^0.23.1",
     "docdash": "^0.4.0",
     "eslint": "^1.10.3",
@@ -63,8 +68,37 @@
     "codecov": ">1.0.0"
   },
   "dependencies": {
+    "babel-polyfill": "6.23.0",
     "flexboxLayout": "github:confirmitasa/flexboxLayout",
     "media-query": "github:confirmitasa/media-query",
     "r-loading-animation": "github:confirmitasa/r-loading-animation"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "ie":11
+          },
+          "modules": "umd"
+        }
+      ],
+      "stage-0"
+    ],
+    "env": {
+      "production": {
+        "only": [
+          "src"
+        ]
+      },
+      "test": {
+        "plugins": [
+          "transform-es2015-modules-commonjs",
+          "dynamic-import-node"
+        ]
+      }
+    }
+
   }
 }
