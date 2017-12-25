@@ -11,16 +11,15 @@ class HeaderScroller {
       || contentWindow.webkitRequestAnimationFrame
       || contentWindow.msRequestAnimationFrame;
 
-    this._meta  = {
-      topOffset    : null,
-      ticking      : false,
-      offsetHeight : null,
-      header       : null,
-      lastScrollY  : 0,
+    this._meta = {
+      topOffset: null,
+      ticking: false,
+      offsetHeight: null,
+      header: null,
+      lastScrollY: 0,
       contentWindow: contentWindow
     };
     this.header = reportalHeaderHTMLElement;
-    this._scrollCallback = this._scrollCallback.bind(this);
     this.attachListeners();
   }
 
@@ -34,7 +33,7 @@ class HeaderScroller {
       this._meta.topOffset = this.headerTopOffset;
       this._resetHeader();
     }
-    this._meta.header       = headerElement;
+    this._meta.header = headerElement;
     this._meta.offsetHeight = headerElement.offsetHeight;
     this._configureHeader();
     this._setHeaderOffsetInIframe();
@@ -48,7 +47,7 @@ class HeaderScroller {
     const header = this.header;
     header.classList.remove('scrollable-header');
     header.style.top = "";
-   // this.detachListeners();
+    // this.detachListeners();
   }
 
   _configureHeader() {
@@ -58,7 +57,7 @@ class HeaderScroller {
   }
 
   _setHeaderOffsetInIframe() {
-    const iframeBody           = this._meta.contentWindow.document.querySelector('body');
+    const iframeBody = this._meta.contentWindow.document.querySelector('body');
     iframeBody.style.paddingTop = this._meta.offsetHeight + "px";
   }
 
@@ -70,23 +69,23 @@ class HeaderScroller {
   }
 
   attachListeners() {
-    this._meta.contentWindow.addEventListener("scroll", this._scrollFixed.bind(this), false);
+    this._meta.contentWindow.addEventListener("scroll", this._scrollFixed, false);
   }
 
   detachListeners() {
     this._meta.contentWindow.removeEventListener("scroll", this._scrollFixed);
   }
 
-  _scrollFixed() {
+  _scrollFixed=()=>{
     this._meta.lastScrollY = this._meta.contentWindow.pageYOffset;
     this.requestTick(this._scrollCallback);
-  }
+  };
 
-  _scrollCallback() {
-    let offset            = this._meta.lastScrollY;
+  _scrollCallback=()=>{
+    let offset = this._meta.lastScrollY;
     this.header.style.top = -offset + 'px';
-    this._meta.ticking    = false;
-  }
+    this._meta.ticking = false;
+  };
 }
 
 export default HeaderScroller

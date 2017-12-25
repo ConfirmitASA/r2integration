@@ -1,79 +1,78 @@
 export default class MDHierarchy {
-  /**
-   * attaches a listener to a hierarchy popup when it's initialised to be able to close it on click-outside
-   * */
-  static upgrade() {
-    const hierarchyButton = MDHierarchy.hierarchyToggle;
-    hierarchyButton && hierarchyButton.addEventListener('click', MDHierarchy.hierarchyToggleClickHandler)
-  }
-
-  static get hierarchyToggle() {
+  get hierarchyToggle() {
     return document.querySelector('.dd-target-button');
   }
 
-  static get hierarchyChrome() {
-    return MDHierarchy.hierarchyToggle.parentNode.querySelector('.dd-drilldown')
+  get hierarchyChrome() {
+    return this.hierarchyToggle.parentNode.querySelector('.dd-drilldown')
   }
 
-  static asyncHierarchyChrome() {
+  get cancelButton() {
+    return this.hierarchyChrome.querySelector('.dd-cancel')
+  }
+
+  get applyButton() {
+    return this.hierarchyChrome.querySelector('.dd-button-select')
+  }
+
+  /**
+   * attaches a listener to a hierarchy popup when it's initialised to be able to close it on click-outside
+   * */
+  upgrade() {
+    const hierarchyButton = this.hierarchyToggle;
+    hierarchyButton && hierarchyButton.addEventListener('click', this.hierarchyToggleClickHandler)
+  }
+
+  asyncHierarchyChrome() {
     return new Promise(resolve =>
       setTimeout(() => {
-          const hierarchyChrome = MDHierarchy.hierarchyChrome;
-          hierarchyChrome ? resolve(hierarchyChrome) : resolve(MDHierarchy.asyncHierarchyChrome())
+          const hierarchyChrome = this.hierarchyChrome;
+          hierarchyChrome ? resolve(hierarchyChrome) : resolve(this.asyncHierarchyChrome())
         },
         300)
     )
   }
 
-  static hierarchyToggleClickHandler() {
-    MDHierarchy.detachHierarchyToggleClickListener();
-    MDHierarchy.disablePageScroll();
-    let hierarchyChrome = MDHierarchy.hierarchyChrome;
+  hierarchyToggleClickHandler() {
+    this.detachHierarchyToggleClickListener();
+    this.disablePageScroll();
+    let hierarchyChrome = this.hierarchyChrome;
     if (!hierarchyChrome) {
-      hierarchyChrome = MDHierarchy.asyncHierarchyChrome();
-      hierarchyChrome.then(MDHierarchy.attachChromeCloseListener)
+      hierarchyChrome = this.asyncHierarchyChrome();
+      hierarchyChrome.then(this.attachChromeCloseListener)
     } else {
-      MDHierarchy.attachChromeCloseListener(hierarchyChrome)
+      this.attachChromeCloseListener(hierarchyChrome)
     }
   }
 
-  static detachHierarchyToggleClickListener() {
-    MDHierarchy.hierarchyToggle.removeEventListener('click', MDHierarchy.hierarchyToggleClickHandler);
+  detachHierarchyToggleClickListener() {
+    this.hierarchyToggle.removeEventListener('click', this.hierarchyToggleClickHandler);
   }
 
-
-  static attachChromeCloseListener(hierarchyChrome) {
-    hierarchyChrome.addEventListener('click', MDHierarchy.onChromeClose)
+  attachChromeCloseListener(hierarchyChrome) {
+    hierarchyChrome.addEventListener('click', this.onChromeClose)
   }
 
-  static onChromeClose(event) {
-    const cancel    = MDHierarchy.cancelButton,
-          apply     = MDHierarchy.applyButton,
-          chrome    = MDHierarchy.hierarchyChrome,
-          clickedEl = event.path[0];
+  onChromeClose(event) {
+    const cancel = this.cancelButton,
+      apply = this.applyButton,
+      chrome = this.hierarchyChrome,
+      clickedEl = event.path[0];
 
     if ([chrome, cancel, apply].indexOf(clickedEl) > -1) {
       if (clickedEl == chrome) {
         cancel.click();
       } else {
-        MDHierarchy.enablePageScroll();
+        this.enablePageScroll();
       }
     }
   }
 
-  static get cancelButton() {
-    return MDHierarchy.hierarchyChrome.querySelector('.dd-cancel')
-  }
-
-  static get applyButton() {
-    return MDHierarchy.hierarchyChrome.querySelector('.dd-button-select')
-  }
-
-  static disablePageScroll() {
+  disablePageScroll() {
     document.querySelector('body').setAttribute('style', 'overflow:hidden !important');
   }
 
-  static enablePageScroll() {
+  enablePageScroll() {
     document.querySelector('body').removeAttribute('style');
   }
 }

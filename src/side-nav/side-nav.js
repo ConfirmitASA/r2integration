@@ -35,15 +35,12 @@ class SideNav {
     // Set initial state to inert since the drawer is offscreen
     this.detabinator = new Detabinator(this.sideNavContainerEl);
     this.detabinator.inert = true;
-
-    this.startX = 0;
-    this.currentX = 0;
-    this.touchingSideNav = false;
-    this.supportsPassive = null;
-
-    //this.addEventListeners();
   }
 
+  startX = 0;
+  currentX = 0;
+  touchingSideNav = false;
+  supportsPassive = null;
 
   // apply passive event listening if it's supported
   applyPassive() {
@@ -58,7 +55,8 @@ class SideNav {
           isSupported = true;
         }
       });
-    } catch (e) {}
+    } catch (e) {
+    }
     this.supportsPassive = isSupported;
     return this.applyPassive();
   }
@@ -126,7 +124,7 @@ class SideNav {
     this.sideNavContainerEl.style.transform = `translateX(${translateX}px)`;
   };
 
-  blockClicks=(evt)=>{
+  blockClicks = (evt) => {
     evt.stopPropagation();
   };
 
