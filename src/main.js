@@ -1,7 +1,11 @@
 import './main.css';
-import MDHierarchy from "./hierarchy/hierarchy";
-import TransformMenuAt from "./navigation/menu-transformer";
+import MDHierarchy from './hierarchy/hierarchy';
+import TransformMenuAt from './navigation/menu-transformer';
+import sendFilters from './r2/sendFilters';
 
-window.Reportal = window.Reportal || {};
-window.Reportal.TransformMenuAt = TransformMenuAt;
-window.Reportal.hierarchyUpgrade = MDHierarchy.upgrade;
+window.Reportal = {
+  ...(window.Reportal || {}),
+  TransformMenuAt,
+  hierarchyUpgrade: MDHierarchy.upgrade,
+  sendFilters,
+};
