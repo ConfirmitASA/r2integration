@@ -39,7 +39,7 @@
   }
 }
 
-@media all AND (min-width:0) AND (max-width:768px) {
+@media screen AND (min-width:0) AND (max-width:768px) {
 
   .reportal-horizontal-menu{
     padding: 8px 0;

@@ -58,7 +58,6 @@
     "loader-utils": "^0.2.12",
     "postcss": "^5.0.21",
     "postcss-apply": "^0.2.0",
-    "postcss-cssnext": "^2.6.0",
     "postcss-import": "^8.1.2",
     "postcss-inline-svg": "trysound/postcss-inline-svg",
     "r-visual-fixture-test": "github:confirmitasa/r-visual-fixture-test",
@@ -66,10 +65,12 @@
     "rimraf": "^2.5.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.1",
-    "codecov": ">1.0.0"
+    "codecov": ">1.0.0",
+    "reportal-postcss-extractor": "github:confirmitasa/reportal-postcss-extractor",
+    "postcss-cssnext": "github:confirmitasa/postcss-cssnext"
   },
   "dependencies": {
-    "babel-polyfill": "6.23.0",
+    "MD-reportal-filter-panel": "github:confirmitasa/MD-reportal-filter-panel",
     "flexboxLayout": "github:confirmitasa/flexboxLayout",
     "lodash": "^4.17.4",
     "media-query": "github:confirmitasa/media-query",

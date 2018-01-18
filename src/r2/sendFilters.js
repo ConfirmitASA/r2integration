@@ -42,7 +42,7 @@ function getOriginalConfig() {
     const scripts = document.querySelectorAll('script');
     if (scripts) {
       let i = scripts.length;
-      const cfg = /(Y\.FilterContainer,)\s(.*?)\);/gi;
+      const cfg = /(Y\.FilterContainer,)\s(.*?)\)/gi;
       while (i--) {
         const script = scripts[i].text;
         if (script.indexOf('Y.FilterContainer,') > -1) {
@@ -70,15 +70,15 @@ function getProperURL(url) {
     search,
     origin: window.location.origin,
   });
-  location.query.PageStateId = getInternalValue('#PageStateId');
-  location.query.PageId = getInternalValue('#CurrentPageId');
+  location.query.pagestateid = getInternalValue('#PageStateId');
+  location.query.pageid = getInternalValue('#CurrentPageId');
   return locationSerialize(location);
 }
 
 function getFilterConfiguration() {
-  const {ServiceUrl} = getOriginalConfig();
-  if (ServiceUrl) {
-    return promiseRequest(getProperURL(ServiceUrl));
+  const config = getOriginalConfig();
+  if (config && config.ServiceUrl) {
+    return promiseRequest(getProperURL(config.ServiceUrl));
   }
   return Promise.resolve();
 }
@@ -103,24 +103,29 @@ function createFilterPayload({Type, Id, Value1}, pNumber) {
 }
 
 function updateConfigWithValues({configuration = {}, hierarchyConfig = {}, values: {filterPanel, hierarchy} = {}}) {
-  return {
+  const configWithModifiedValues = {
     ...configuration,
     Items: [
       ...(configuration.Items || []).map(item => ({
         ...item,
-        Value1: (filterPanel[item.Id] || {}).Precodes || null,
-      })),
-      ...Object.keys.hierarchyConfig.map(hierarchyQuestion => ({
-        Id: hierarchyQuestion,
-        Type: 'hierarchy',
-        Value1: (
-          hierarchy
-            ? hierarchy.map(selected => selected.NodeId)
-            : (hierarchyConfig[hierarchyQuestion] || []).map(selected => selected.level)
-        ) || null,
+        Value1: (filterPanel ? filterPanel[item.Id] || {} : {}).Precodes || null,
       })),
     ],
+  };
+
+  if (hierarchyConfig.values && hierarchyConfig.values.length > 0) {
+    configWithModifiedValues.Items.push({
+      Id: hierarchyConfig.question,
+      Type: 'hierarchy',
+      Value1: (
+        hierarchy
+          ? hierarchy.map(selected => selected.NodeId)
+          : hierarchyConfig.values.map(selected => selected.level)
+      ) || null,
+    })
   }
+
+  return configWithModifiedValues
 }
 
 function eventPromise(element, eventName, callback) {
@@ -136,7 +141,7 @@ function eventPromise(element, eventName, callback) {
 
 function getUpdateQuery(filterInfo) {
   const search = decodeURIComponent(filterInfo);
-  const {query} = locationDeserialize({search});
+  const {query} = JSON.parse(JSON.stringify(locationDeserialize({search})));
   return query
 }
 
@@ -148,23 +153,6 @@ export default function sendFilters(targetOrigin = 'http://r2.firmglobal.com') {
 
   const {pNumber, hierarchyConfig} = externalConfig;
 
-  function sendPayload(target, payload) {
-    target.postMessage(payload, targetOrigin)
-  }
-
-  getFilterConfiguration()
-    .then(configuration => {
-        setupDataListener(configuration);
-
-        const config = updateConfigWithValues({configuration, hierarchyConfig});
-        const payload = parseConfig(config);
-        const r2 = document.querySelector('.r2dashboard');
-        return !r2.contentWindow
-          ? eventPromise(r2, 'load', e => sendPayload(e.target.contentWindow, payload))
-          : sendPayload(r2.contentWindow, payload);
-      },
-    );
-
   function parseConfig({Items = []}) {
     const externalFilters = Items.reduce((result, filterItem) => {
       if (filterItem.Value1) {
@@ -175,24 +163,57 @@ export default function sendFilters(targetOrigin = 'http://r2.firmglobal.com') {
     return {externalFilters}
   }
 
+  function postMessage(payload) {
+    const r2 = document.querySelector('.r2dashboard');
+    console.debug('will send filters to appstudio', payload);
+    if(r2==null) {
+      console.warn('appStudio is not found on this page, please check if you\'ve loaded it correctly or it exists');
+      return
+    }
+    return !r2.contentWindow
+      ? eventPromise(r2, 'load', e => sendPayload(e.target.contentWindow, payload))
+      : sendPayload(r2.contentWindow, payload);
+
+  }
+
+  function sendPayload(target, payload) {
+    target.postMessage(payload, targetOrigin)
+  }
+
   function setupDataListener(configuration) {
     if (Y && Y.Global) {
       Y.Global.on('reportcontroller:viewModeDataUpdate', filterInfo => {
-        const {customFilters: filterPanel, persNodes: hierarchy} = getUpdateQuery(filterInfo);
+        const {customfilters, persnodes} = getUpdateQuery(filterInfo);
+        const filterPanel = customfilters ? JSON.parse(customfilters) : undefined;
+        const hierarchy = persnodes ? JSON.parse(persnodes) : undefined;
         const config = updateConfigWithValues({
           configuration,
           hierarchyConfig,
           values: {filterPanel, hierarchy},
         });
         const payload = parseConfig(config);
-        const r2 = document.querySelector('.r2dashboard');
-        return !r2.contentWindow
-          ? eventPromise(r2, 'load', e => sendPayload(e.target.contentWindow, payload))
-          : sendPayload(r2.contentWindow, payload);
+        return postMessage(payload);
       })
     } else {
-      throw new Error('YUI is not defined or accessible, cannot set up a "reportcontroller:viewModeDataUpdate" listener');
+      console.error('YUI is not defined or accessible, cannot set up a "reportcontroller:viewModeDataUpdate" listener');
     }
+    return configuration;
   }
+
+  // execute function
+  getFilterConfiguration()
+    .then(configuration => {
+      if (configuration) {
+        return JSON.parse(configuration)
+      }
+      console.warn('filter panel doesn\'t exist on page, skip it from sending filters to appStudio');
+      return;
+    })
+    .then(setupDataListener)
+    .then(configuration => updateConfigWithValues({configuration, hierarchyConfig}))
+    .then(parseConfig)
+    .then(postMessage)
+    .catch(e => console.error(e));
+
 }
 
