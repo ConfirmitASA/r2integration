@@ -83,6 +83,7 @@ function getFilterConfiguration() {
   return Promise.resolve();
 }
 
+/*
 const payload = {
   externalFilters: [{
     function: 'InHierarchy', //optional
@@ -90,6 +91,7 @@ const payload = {
     value: ['Top'],
   }],
 };
+*/
 
 function createFilterPayload({Type, Id, Value1}, pNumber) {
   return Type === 'hierarchy' ? {
@@ -100,6 +102,10 @@ function createFilterPayload({Type, Id, Value1}, pNumber) {
     variable: `${pNumber}.responseId:${Id}`,
     value: Value1,
   };
+}
+
+function createStudioFilterPayload({Id, Value1}) {
+  return {[Id]: Value1}
 }
 
 function updateConfigWithValues({configuration = {}, hierarchyConfig = {}, values: {filterPanel, hierarchy} = {}}) {
@@ -145,7 +151,7 @@ function getUpdateQuery(filterInfo) {
   return query
 }
 
-export default function sendFilters(targetOrigin = 'http://r2.firmglobal.com') {
+export default function sendFilters(targetOrigin = 'http://r2.firmglobal.com', timeout) {
   let externalConfig = window.studioIntegrationConfig;
   if (!externalConfig) {
     //eventPromise(document,'textNodeLoaded', ()=>{externalConfig=window.studioIntegrationConfig})
@@ -154,19 +160,26 @@ export default function sendFilters(targetOrigin = 'http://r2.firmglobal.com') {
   const {pNumber, hierarchyConfig} = externalConfig;
 
   function parseConfig({Items = []}) {
-    const externalFilters = Items.reduce((result, filterItem) => {
+    /*    const externalFilters = Items.reduce((result, filterItem) => {
+          if (filterItem.Value1) {
+            result.push(createFilterPayload(filterItem, pNumber))
+          }
+          return result
+        }, []);
+        return {externalFilters}*/
+    const studioFilters = Items.reduce((result, filterItem) => {
       if (filterItem.Value1) {
-        result.push(createFilterPayload(filterItem, pNumber))
+        return Object.assign({}, result, createStudioFilterPayload(filterItem))
       }
       return result
-    }, []);
-    return {externalFilters}
+    }, {});
+    return {studioFilters}
   }
 
   function postMessage(payload) {
     const r2 = document.querySelector('.r2dashboard');
     console.debug('will send filters to appstudio', payload);
-    if(r2==null) {
+    if (r2 == null) {
       console.warn('appStudio is not found on this page, please check if you\'ve loaded it correctly or it exists');
       return
     }
@@ -192,7 +205,10 @@ export default function sendFilters(targetOrigin = 'http://r2.firmglobal.com') {
           values: {filterPanel, hierarchy},
         });
         const payload = parseConfig(config);
-        return postMessage(payload);
+        setTimeout(function () {
+          console.log('sendFilters: sending filters after timeout');
+          postMessage(payload)
+        }, timeout);
       })
     } else {
       console.error('YUI is not defined or accessible, cannot set up a "reportcontroller:viewModeDataUpdate" listener');
@@ -212,8 +228,15 @@ export default function sendFilters(targetOrigin = 'http://r2.firmglobal.com') {
     .then(setupDataListener)
     .then(configuration => updateConfigWithValues({configuration, hierarchyConfig}))
     .then(parseConfig)
+    .then(config => new Promise(resolve => {
+        console.log('sendFilters: setting timeout', timeout);
+        setTimeout(function () {
+          console.log('sendFilters: sending filters after timeout');
+          resolve(config)
+        }, timeout)
+      }),
+    )
     .then(postMessage)
     .catch(e => console.error(e));
-
 }
 
