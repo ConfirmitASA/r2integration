@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ReportalPostcssExtractor = require('reportal-postcss-extractor');
 var packageJSON = require('../package.json');
 var name = packageJSON["name"];
 const AUTOPREFIXER_BROWSERS = [
@@ -24,6 +25,7 @@ config.module.loaders.push({
 
 config.devtool = 'source-map';
 config.plugins = [
+  new ReportalPostcssExtractor(),
   new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify('production'),
